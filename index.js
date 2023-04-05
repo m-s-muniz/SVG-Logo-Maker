@@ -1,6 +1,6 @@
 const fs = require("fs");
 const inquirer = require("inquirer");
-const {Circle, Square, Triangle} = require("./lib/shapes");
+const {Circle} = require("./lib/shapes");
 
 
 //An array of questions for user input.
@@ -27,14 +27,20 @@ const questions = [
     choices: ["Circle", "Triangle", "Square"],
 },
 ];
-// Svg class that has a constructor with methods for rendering and setting the text and shape elements in the SVG string.
+// Svg class that has a constructor with method for rendering and setting the text and shape elements in the SVG string.
 class Svg {
   constructor() {
       this.textElement = '';
       this.shapeElement = '';
   }
   render() {
-      return `TEST`;
+      return `<svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg" >${this.shapeElement}${this.textElement}</svg>`;
+  }
+  setTextElement(text, color) {
+    this.textElement = `<text x="150" y="125" font-size="35" text-anchor="middle" fill="${color}">${text}</text>`;
+  }
+  setShapeElement(shape) {
+    this.shapeElement = shape.render();
   }
 }
 
@@ -72,15 +78,36 @@ function init() {
         shape = new Triangle();
         console.log("You chose a Triangle Logo");
     }
-    // Create a new Svg instance and add the shape and text elements to it
+
+      shape.setColor(shapeColr);
+
+      // Create a new Svg instance
       var svg = new Svg();
+      // Add the text elements
+      svg.setTextElement(characters, fontColor);
+      // Add the shape element
+      svg.setShapeElement(shape);
       svgString = svg.render();
       //Console.log SVG string
       console.log("Here is the SVG String:  " + svgString);
- 
+      return writeToFile("logo.svg", svgString);
 
 })
 .catch((err) => console.log(err));
+}
+// Function to write data to file
+function writeToFile(fileName, data) {
+  console.log("Writing [" + data + "] to file [" + fileName + "]");
+  return new Promise((resolve, reject) => {
+      fs.writeFile(fileName, data, function (err) {
+          if (err) {
+              reject(err);
+          } else {
+              console.log("logo.svg logo generated.");
+              resolve();
+          }
+      });
+  });
 }
 
 init();
