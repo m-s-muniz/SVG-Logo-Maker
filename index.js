@@ -1,6 +1,6 @@
 const fs = require("fs");
 const inquirer = require("inquirer");
-const {Circle} = require("./lib/shapes");
+const {Circle, Triangle, Square} = require("./lib/shapes");
 
 
 //An array of questions for user input.
@@ -80,7 +80,6 @@ function init() {
     }
 
       shape.setColor(shapeColr);
-
       // Create a new Svg instance
       var svg = new Svg();
       // Add the text elements
